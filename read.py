@@ -3,7 +3,7 @@
 
 def obj_read(filename):
     content = None
-    scale = 0.35
+    scale = 1
     with open(filename, "r") as f:
         content = f.read().split("\n")
     faces = []
@@ -21,4 +21,4 @@ def obj_read(filename):
             face.append(int(line[0].split("/")[0]) - 1)
             faces.append(face)
         #print(vertex, faces)
-    return ({"vertex": reversed(vertex),"faces": faces})
+    return ({"vertex": list(reversed(vertex)),"faces": faces})
