@@ -1,6 +1,7 @@
-# Isometric Render builded in Python
+Isometric Render builded in Python
+----------------------------------
 
-3d engine to create isometric style games
+3d engine to create isometric styled games
 
 Motivation
 ----------
