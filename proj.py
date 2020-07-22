@@ -1,7 +1,14 @@
 #!/usr/bin/python3
+"""
+Projection algorithms for isometric perspective
+"""
 from tkinter import *
 
 def proj_vert(vertex, w, h):
+    """
+    Projects on vertex depends on the
+    defined inclination
+    """
     inc = 0.7
     x, y, z = float(vertex["x"]), float(vertex["y"]), float(vertex["z"])
     Px = (inc * x) - (inc * y) + (w / 2)
@@ -9,6 +16,9 @@ def proj_vert(vertex, w, h):
     return {"x": int(Px), "y": int(Py)}
 
 def get_iso_map_width(terrain, dim):
+    """
+    Get the width for the entire isometric map
+    """
     if "faces" in terrain and "vertex" in terrain:
         fs = terrain["faces"]
         vr = terrain["vertex"]
@@ -24,6 +34,9 @@ def get_iso_map_width(terrain, dim):
         return w, h
 
 def project_vertexs(obj, viewport, scx, scy):
+    """
+    Project all vertex from object
+    """
     w = viewport["width"]
     h = viewport["height"]
     projected = []
@@ -33,6 +46,9 @@ def project_vertexs(obj, viewport, scx, scy):
 
 
 def scroll_zoom(canvas):
+    """
+    zoom event handler
+    """
     scl_cont = Canvas(canvas, width=20, height=210, bg="white", cursor="hand2")
     scl_cont.create_rectangle(7, 4, 13, 206, fill="grey")
     selector = scl_cont.create_oval(2, 2, 19, 20, fill="white")
@@ -56,9 +72,12 @@ def scroll_zoom(canvas):
     scl_cont.place(x=4, y=20)
 
 def terrain_grid(obj, root, cnv):
-    #Projected vertices
+    """
+    Draw the isometric grid in red
+    using the projected vertex
+    """
+    # Projected vertices
     dim = {"width": root.winfo_screenwidth(), "height": root.winfo_screenheight()}
-
     tr_w, tr_h = get_iso_map_width(obj, dim)
     scr_reg_w = int((tr_w / dim["width"])) + 2
     scr_reg_h = int((tr_h / dim["height"])) + 2
@@ -72,7 +91,9 @@ def terrain_grid(obj, root, cnv):
     act_tile = [None]
     clicked  = [None]
     def color_tile(evn, color):
-        #print("Over coord: ", evn.x , evn.y)
+        """
+        Fill a hovered tile with yellow
+        """
         item = canvas.find_closest(canvas.canvasx(evn.x), canvas.canvasy(evn.y), halo=None, start=None)
         if act_tile[0] is not None and item[0] is not None:
             canvas.config(cursor="hand2")
@@ -88,19 +109,22 @@ def terrain_grid(obj, root, cnv):
         act_tile[0] = item[0]
 
     def tile_mot(evn):
+        """
+        Fill a selected tile
+        """
         color_tile(evn, "blue")
 
     def tile_click(evn):
+        """
+        Detect click on any tile
+        """
         item = canvas.find_closest(canvas.canvasx(evn.x), canvas.canvasy(evn.y), halo=None, start=None)
         bbox = canvas.bbox(item[0])
-        #print("tile width is {}".format(bbox[2] - bbox[0]))
         canvas.itemconfigure(item[0], fill="#cffc03")
         clicked[0] = item[0]
         print(item[0], pvs[item[0] - 1])
         print("x, y view: ", canvas.canvasx(evn.x), canvas.canvasy(evn.y))
-        #print(dir(canvas))
-
-    #Drawing each polygon
+    # Drawing each polygon
     for f in obj["faces"]:
         poly = []
         for el in f:
@@ -112,14 +136,16 @@ def terrain_grid(obj, root, cnv):
     canvas.bind("<Button-1>", lambda evn: tile_click(evn))
 
     def getTileSize(can):
+        """
+        Get the tile dimensions to calculate the events
+        and engine behavior
+        """
         box = can.bbox(1)
         w = box[2] - box[0]
         h = box[3] - box[1]
         print("Tile size: ", w, h)
         return (w, h)
-
     tile_size = getTileSize(canvas)
     scroll_view = scroll_zoom(canvas)
     cnv[0] = canvas
     return tile_size
-    # print(projected_vertx)
