@@ -1,29 +1,34 @@
 function getCanvasDimensions() {
-    const canvas = document.querySelector('[active_canvas="true"]');
-    return canvas.getBoundingClientRect();
+    const view = document.querySelector('[active_canvas="true"]');
+    return view.querySelector('canvas').getBoundingClientRect();
 }
 
 class Menu {
     constructor() {
+        this.DEV_STATUSES = {
+            1: {def: 'Not Implemented', color: 'grey'},
+            2: {def: 'In develop', color: 'yellow'},
+            3: {def: 'Completed', color: 'green'},
+        }
         this.barDiv = document.getElementById('menu_bar');
         this.optionsDiv = document.getElementById('menu_options');
         this.tabs = {
             file: {
                 options: [
-                    {label: 'Open File...', action: () => {}},
-                    {label: 'Import...', action: () => {}, tail: true},
-                    {label: 'Save...', action: () => {}},
+                    {label: 'Open File...', action: () => {}, status: 1},
+                    {label: 'Import...', action: () => {}, status: 1, tail: true},
+                    {label: 'Save...', action: () => {}, status: 1},
                 ]
             },
             edit: {
                 options: [
-                    {label: 'Undo...', action: () => {}},
-                    {label: 'Redo...', action: () => {}},
+                    {label: 'Undo...', action: () => {}, status: 1},
+                    {label: 'Redo...', action: () => {}, status: 1},
                 ]
             },
             scene: {
                 options: [
-                    {label: 'Render with Raytracer', action: async()=> {raytrace()}}
+                    {label: 'Render with Raytracer', action: async()=> {raytrace()}, status: 3}
                 ]
             },
         }
@@ -52,7 +57,7 @@ class Menu {
         // Apply the events to each option
         for (const option of this.tabs[tab].options) {
             let li = document.createElement('li');
-            li.innerHTML = option.label;
+            li.innerHTML = `<i style="background-color: ${context.DEV_STATUSES[option.status].color}"></i>${option.label}`;
             li.addEventListener('click', async()=>{
                 optionsContainer.style.display = 'none';
                 option.action();
