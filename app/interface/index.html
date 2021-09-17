@@ -1,15 +1,44 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>3d engine</title>
         <script type="text/javascript" src="/eel.js"></script>
+        <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-        <div>
-            <h1>Open file</h1>
-            <input id="filename" type="file" placeholder="filename">
-            <button id="openfile">open</button>
+        <div id="main_frame">
+            <div id="menu_bar">
+                <ul>
+                    <li tab='file'>File</li>
+                    <li tab='edit'>Edit</li>
+                    <li tab='object'>Object</li>
+                    <li tab='scene'>Scene</li>
+                    <li tab='preferences'>Preferences</li>
+                    <li tab='about'>About</li>
+                </ul>
+            </div>
+            <div id="menu_options">
+                <ul></ul>
+            </div>
+            <div id="tool_bar">
+
+            </div>
+            <canvas active_canvas="true"></canvas>
+            <button id="refresh_btn">Refresh</button>
+        </div>
+        <div id="prompt" style="display: none;">
+            <div class="open_dialog" style="display: none;">
+                <h1>Welcome!</h1>
+                <p>please open a file or select 'New Project' to start one from scratch</p>
+                <button id="openfile">Open File</button>
+                <button>New Project</button>
+            </div>
+            <div id="load_dialog">
+                <h1></h1>
+            </div>
         </div>
     </body>
     <script src="js/main.js"></script>
+    <script src="js/menu.js"></script>
 </html>

@@ -1,0 +1,147 @@
+body{
+    background-color: rgb(59, 59, 59);
+    padding: 0;
+    margin: 0;
+}
+h1, h2, h3, p, button, li {
+    color: white;
+    font-family: sans-serif;
+}
+
+button {
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: translate(-1px, -1px);
+}
+
+button:active {
+    transform: translate(0, 0);
+    filter: brightness(0.1);
+}
+
+#refresh_btn {
+    background-color: rgb(2, 143, 124);
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+}
+
+ul {
+    list-style: none;
+}
+
+li:hover {
+    background-color: rgba(128, 128, 128, 0.678);
+    cursor: pointer;
+}
+
+#prompt {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(63, 39, 39, 0.781);
+}
+
+.open_dialog {
+    position: absolute;
+    background-color: rgb(37, 37, 37);
+    width: 50vw;
+    top: calc(50vh - 119px);
+    left: calc(25vw - 19px);
+    border-radius: 12px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.459);
+    padding: 19px;
+}
+.open_dialog h1 {
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.open_dialog button {
+    background-color: rgb(160, 58, 40);
+}
+
+#main_frame {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(34, 16, 16);
+    margin: 0;
+    padding: 0;
+}
+
+#menu_bar {
+    padding: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.473);
+}
+
+#menu_bar ul {
+    display: flex;
+    list-style: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+#menu_bar li {
+    padding: 0;
+    margin: 2px;
+    line-height: 32px;
+    border-radius: 6px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+#menu_options {
+    border-radius: 4px;
+    z-index: 100;
+    position: absolute;
+    top: 32px;
+    background-color: rgb(0, 0, 0);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.281);
+}
+
+#menu_options ul {
+    margin: 0;
+    padding: 0;
+}
+
+#menu_options li {
+    margin: 0;
+    padding: 6px;
+
+}
+
+
+canvas {
+    position: absolute;
+    top: 44px;
+    left: 40px;
+    width: calc(50vw - 80px);
+    height: calc(50vh - 44px);
+    background-color: grey;
+}
+
+#load_dialog {
+    position: absolute;
+    width: 50vw;
+    left: 25vw;
+    top: calc(50vh - 200px);
+}
+
+#load_dialog h1 {
+    width: 100%;
+    text-align: center;
+}

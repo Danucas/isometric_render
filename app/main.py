@@ -5,14 +5,93 @@ creates the tk instance window
 """
 
 import eel
+import base64
+import random
+from PIL import Image
+import numpy as np
+from utilities.linear_algebra import (
+    normalize,
+    nearest_intersected_object
+)
+
+eel.init('interface')
+world = {
+    'objects': [
+        { 'center': np.array([-0.2, 0, -1]), 'radius': 0.7, 'ambient': np.array([0.1, 0, 0, 1]), 'diffuse': np.array([0.7, 0, 0, 1]), 'specular': np.array([1, 1, 1, 1]), 'shininess': 100 },
+        { 'center': np.array([0.1, -0.3, 0]), 'radius': 0.1, 'ambient': np.array([0.1, 0, 0.1, 1]), 'diffuse': np.array([0.7, 0, 0.7, 1]), 'specular': np.array([1, 1, 1, 1]), 'shininess': 100 },
+        { 'center': np.array([-0.3, 0, 0]), 'radius': 0.15, 'ambient': np.array([0, 0.1, 0, 1]), 'diffuse': np.array([0, 0.6, 0, 1]), 'specular': np.array([1, 1, 1, 1]), 'shininess': 100 }
+    ],
+    'lights': [
+        { 'position': np.array([5, 5, 5]), 'ambient': np.array([1, 1, 1, 1]), 'diffuse': np.array([1, 1, 1, 1]), 'specular': np.array([1, 1, 1, 1]) }
+    ]
+}
 
 @eel.expose
 def open_file(filename):
     print(filename)
 
 
+@eel.expose
+def log(text):
+    print(text)
+
+
+@eel.expose
+def raytrace(canvas_dimensions):
+    width = canvas_dimensions.get('width')
+    height = canvas_dimensions.get('height')
+
+    ratio =  float(width) / height
+    screen = (-1, 1/ratio, 1, -1/ratio)
+    image = np.zeros((int(height), int(width), 4))
+    image = image + np.array([0, 0, 0, 255])
+
+    for i, y in enumerate(np.linspace(screen[1], screen[3], int(height))):
+        for j, x in enumerate(np.linspace(screen[0], screen[2], int(width))):
+            light = world['lights'][0]
+            pixel = np.array([x, y, 0])
+            origin = world['camera']
+            direction = normalize(pixel - origin)
+
+            nearest_object, min_distance = nearest_intersected_object(world['objects'], origin, direction)
+            if nearest_object is None:
+                continue
+
+            intersection = origin + min_distance  * direction
+
+            normal_to_surface = normalize(intersection - nearest_object['center'])
+            shifted_point = intersection + 1e-5 * normal_to_surface
+
+            intersection_to_light = normalize(light['position'] - shifted_point)
+
+            _, min_distance = nearest_intersected_object(world['objects'], shifted_point, intersection_to_light)
+            intersection_to_light_distance = np.linalg.norm(light['position'] - intersection)
+            is_shadowed = min_distance < intersection_to_light_distance
+
+            if is_shadowed:
+                continue
+
+            illumination = np.zeros((4))
+            
+            illumination += nearest_object['ambient'] * light['ambient']
+
+            illumination += nearest_object['diffuse'] * light['diffuse'] * np.dot(intersection_to_light, normal_to_surface)
+
+            intersection_to_camera = normalize(world['camera'] - intersection)
+            H = normalize(intersection_to_light + intersection_to_camera)
+            illumination += nearest_object['specular'] * light['specular'] * np.dot(normal_to_surface, H) ** (nearest_object['shininess'] / 4)
+
+            illumination[3] = 1
+            image[i, j] = np.clip(illumination, 0, 1) * 255
+
+    pixels = np.concatenate(image).ravel().tolist()
+
+    return pixels
+
+
 def main():
-    eel.init('interface')
+    world['camera'] = np.array([0, 0, 1])
+    
     eel.start('index.html')
 
 if __name__ == '__main__':
