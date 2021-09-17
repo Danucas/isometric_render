@@ -18,7 +18,7 @@ document.getElementById('openfile').addEventListener('click', ()=> {
 async function raytrace() {
     dialog = new LoadDialog('Rendering Scene');
     dialog.display();
-    const canvas = document.querySelector('[active_canvas="true"]');
+    const canvas = document.querySelector('[active_canvas="true"]').querySelector('canvas');
     let dimensions = getCanvasDimensions();
     let pixels = await eel.raytrace(dimensions)();
     const ctx = canvas.getContext('2d');
