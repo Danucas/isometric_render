@@ -4,7 +4,8 @@ Read .obj .txt files an parsed to objects
 """
 
 from models.mesh import Mesh
-from models.vectors import Vector3D
+import numpy as np
+
 
 def read(filename):
     """
@@ -24,10 +25,12 @@ def read(filename):
     for line in content:
         line = line.replace('  ', ' ').strip().split(" ")
         if line[0] == "v":
-            vertex.append(Vector3D(
-                float(line[1]) * scale,
-                float(line[2]) * scale,
-                float(line[3]) * scale
+            vertex.append(np.array(
+                [
+                    float(line[1]) * scale,
+                    float(line[2]) * scale,
+                    float(line[3]) * scale
+                ]
             ))
         if line[0] == "f":
             del line[0]
